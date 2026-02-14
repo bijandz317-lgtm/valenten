@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine</title>
+
+<style>
+body{
+    margin:0;
+    background:black;
+    height:100vh;
+    overflow:hidden;
+    font-family:Segoe UI;
+}
+
+/* HEART */
+.heart{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) rotate(-45deg) scale(0);
+    width:120px;
+    height:120px;
+    background:#ff4d88;
+    animation:grow 7s forwards;
+    box-shadow:0 0 120px #ff4d88;
+}
+
+.heart::before,
+.heart::after{
+    content:'';
+    position:absolute;
+    width:120px;
+    height:120px;
+    background:#ff4d88;
+    border-radius:50%;
+}
+
+.heart::before{ top:-60px; left:0; }
+.heart::after{ left:60px; top:0; }
+
+@keyframes grow{
+    0%{ transform:translate(-50%,-50%) rotate(-45deg) scale(0);}
+    80%{ transform:translate(-50%,-50%) rotate(-45deg) scale(9);}
+    100%{
+        transform:translate(-50%,-50%) rotate(-45deg) scale(9);
+        opacity:0;
+    }
+}
+
+/* TEXT */
+.text{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:90%;
+    text-align:center;
+    color:white;
+    font-size:6vw;
+    text-shadow:
+    0 0 5px red,
+    0 0 15px red,
+    0 0 30px red;
+    opacity:1;
+}
+
+@media (orientation: landscape){
+    .text{
+        font-size:8vw;
+        padding:0 20px;
+        word-break:break-word;
+    }
+}
+
+.star{
+    position:absolute;
+    width:2px;
+    height:100px;
+    background:linear-gradient(#ffd6e7, transparent);
+    animation:fall linear infinite;
+}
+
+.float-heart{
+    position:absolute;
+    width:20px;
+    height:20px;
+    background:#ff4d88;
+    transform:rotate(-45deg);
+    animation:floatUp 5s linear forwards;
+    opacity:0.8;
+}
+
+.float-heart::before,
+.float-heart::after{
+    content:'';
+    position:absolute;
+    width:20px;
+    height:20px;
+    background:#ff4d88;
+    border-radius:50%;
+}
+
+.float-heart::before{ top:-10px; left:0; }
+.float-heart::after{ left:10px; top:0; }
+
+@keyframes floatUp{
+    from{
+        transform:translateY(0) rotate(-45deg) scale(0.5);
+        opacity:1;
+    }
+    to{
+        transform:translateY(-120vh) rotate(-45deg) scale(1.5);
+        opacity:0;
+    }
+}
+
+@keyframes fall{
+    from{ transform:translateY(-100px); }
+    to{ transform:translateY(110vh); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="heart" id="heart"></div>
+<div class="text" id="text"></div>
+
+<script>
+
+function startStars(){
+    setInterval(()=>{
+
+        let star=document.createElement("div");
+        star.className="star";
+
+        star.style.left=Math.random()*window.innerWidth+"px";
+        star.style.animationDuration=(Math.random()*3+3)+"s";
+
+        document.body.appendChild(star);
+
+        setTimeout(()=>{
+            star.remove();
+        },6000);
+
+    },300);
+}
+function startHearts(){
+    setInterval(()=>{
+
+        let heart=document.createElement("div");
+        heart.className="float-heart";
+
+        heart.style.left=Math.random()*window.innerWidth+"px";
+        heart.style.bottom="-20px";
+        heart.style.animationDuration=(Math.random()*2+3)+"s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(()=>{
+            heart.remove();
+        },5000);
+
+    },600); 
+}
+
+
+let messages=[
+"Chúc Ty Valentine dui dẻ nhó 💗🎀✨",
+"Mong Ty ngày nào cũng cười hí hí 😊🌸",
+"Cảm ơn Ty vì đã xuất hiện 🌈🧸",
+"Bin thích Ty dữ lắm lun á 🐣💞",
+"Nho Ty nhìu nhìu 🥺🍭",
+"Có chuyện gì nhớ kể cho Bin biết nhe 💌",
+"Bin lun ở đây đợi Ty nè 🐻🌟",
+"Ty nhớ luôn dễ thương như bây giờ đó 🌸🍬",
+"Yeu bé Ty thé nhò💗",
+"Ai lớp diu bibi 🧁💗"
+];
+
+
+let finalMessage="Tục tưng bé bỏng của Bin hehe 🐥🎈";
+
+let text=document.getElementById("text");
+let index=0;
+
+function typeWriter(message,i,callback){
+    if(i<message.length){
+        text.innerHTML += message.charAt(i);
+        setTimeout(()=>{
+            typeWriter(message,i+1,callback);
+        },70);
+    }else{
+        if(callback){
+            setTimeout(()=>{ fadeOut(callback); },2000);
+        }
+    }
+}
+
+function fadeOut(callback){
+    let op=1;
+    function fade(){
+        if(op<=0){
+            callback();
+            return;
+        }
+        text.style.opacity=op;
+        op-=0.03;
+        setTimeout(fade,40);
+    }
+    fade();
+}
+
+function showNextMessage(){
+    if(index<messages.length){
+        text.innerHTML="";
+        text.style.opacity=1;
+        typeWriter(messages[index],0,()=>{
+            index++;
+            showNextMessage();
+        });
+    }
+    else{
+        text.innerHTML="";
+        text.style.opacity=1;
+        typeWriter(finalMessage,0,null);
+    }
+}
+
+setTimeout(()=>{
+    document.getElementById("heart").style.display="none";
+    startStars();
+    startHearts();
+
+    setTimeout(()=>{
+        showNextMessage();
+    },2000);
+
+},7000);
+
+</script>
+
+</body>
+</html>
