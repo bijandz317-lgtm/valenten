@@ -14,7 +14,6 @@ body{
     font-family:Segoe UI;
 }
 
-/* HEART */
 .heart{
     position:absolute;
     top:50%;
@@ -49,7 +48,6 @@ body{
     }
 }
 
-/* TEXT */
 .text{
     position:absolute;
     top:50%;
@@ -127,6 +125,18 @@ body{
 
 <div class="heart" id="heart"></div>
 <div class="text" id="text"></div>
+<iframe id="particleHeart"
+src="valen.html"
+style="
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+border:none;
+display:none;
+z-index:999;
+"></iframe>
 
 <script>
 
@@ -223,9 +233,9 @@ function showNextMessage(){
         });
     }
     else{
-        text.innerHTML="";
-        text.style.opacity=1;
-        typeWriter(finalMessage,0,null);
+    text.innerHTML="";
+    text.style.opacity=1;
+    typeWriter(finalMessage,0, showParticleHeart);
     }
 }
 
@@ -239,6 +249,18 @@ setTimeout(()=>{
     },2000);
 
 },7000);
+
+function showParticleHeart(){
+
+    setTimeout(()=>{
+
+        text.style.display="none";
+
+        document.getElementById("particleHeart").style.display="block";
+
+    },2000);
+
+}
 
 </script>
 
